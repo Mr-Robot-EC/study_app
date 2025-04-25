@@ -1,0 +1,92 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./backend/services/api_gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - API_VERSION=1.0.0
+    depends_on:
+      - auth-service
+    restart: always
+    networks:
+      - auth-network
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./backend/services/auth_service
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@auth-db:5432/auth_db
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+    depends_on:
+      - auth-db
+    restart: always
+    networks:
+      - auth-network
+
+  # Auth Database
+  auth-db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=auth_db
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    networks:
+      - auth-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Web Frontend
+  web-app:
+    build:
+      context: ./clients/web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+    restart: always
+    networks:
+      - auth-network
+
+  # Mobile App Build Environment (optional, for builds only)
+  mobile-builder:
+    build:
+      context: ./clients/mobile
+      dockerfile: Dockerfile.build
+    volumes:
+      - mobile-build:/app/build
+    profiles:
+      - build
+
+networks:
+  auth-network:
+    driver: bridge
+
+volumes:
+  auth-db-data:
+  mobile-build:
