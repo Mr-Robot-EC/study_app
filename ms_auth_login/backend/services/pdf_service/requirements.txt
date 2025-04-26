@@ -1,0 +1,8 @@
+# File: backend/services/pdf_service/requirements.txt
+fastapi>=0.95.0
+uvicorn>=0.22.0
+sqlalchemy>=2.0.0
+pydantic>=1.10.7
+psycopg2-binary>=2.9.6
+python-dotenv>=1.0.0
+auth_utils>=0.1.0  # Our custom auth utils package

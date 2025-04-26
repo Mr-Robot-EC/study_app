@@ -1,9 +1,9 @@
+# File: backend/libs/auth_utils/src/auth_utils/jwt.py
 from datetime import datetime
 import jwt
 from fastapi import HTTPException, status
 
 from .config import JWT_SECRET_KEY, JWT_ALGORITHM
-
 
 def decode_jwt(token: str, service_name: str = None):
     """

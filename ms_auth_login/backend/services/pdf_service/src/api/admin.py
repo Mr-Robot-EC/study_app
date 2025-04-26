@@ -1,14 +1,16 @@
+# File: backend/services/pdf_service/src/api/admin.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
 
-from backend.libs.auth_utils import CurrentUser, require_roles
+from auth_utils import CurrentUser, require_roles
 from ..db.session import get_db
 from ..db.models import Document
 from ..schemas import Document as DocumentSchema
 
 router = APIRouter(
+    prefix="/admin",
     tags=["admin"]
 )
 

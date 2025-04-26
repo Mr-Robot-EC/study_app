@@ -1,5 +1,6 @@
+# File: backend/services/api_gateway/src/routes/health.py
 from fastapi import APIRouter
-from ...config.settings import SERVICES
+from ..config.settings import SERVICES
 
 router = APIRouter(
     prefix="/health",

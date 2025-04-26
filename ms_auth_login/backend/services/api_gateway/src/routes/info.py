@@ -1,6 +1,7 @@
+# File: backend/services/api_gateway/src/routes/info.py
 from fastapi import APIRouter
 import os
-from ...config.settings import SERVICES
+from ..config.settings import SERVICES
 
 router = APIRouter(tags=["info"])
 

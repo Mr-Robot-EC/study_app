@@ -1,14 +1,27 @@
+# File: backend/services/auth_service/src/db/session.py
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
 
-# Database URL should be loaded from environment variable in production
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:password@localhost/auth_db")
+from ..core.config import settings
 
-engine = create_engine(DATABASE_URL)
+# Get database URL from settings
+DATABASE_URL = settings.DATABASE_URL
+
+# Choose connection pooling based on environment
+if settings.ENVIRONMENT == "test":
+    # Use NullPool for testing to avoid connection leaks
+    engine = create_engine(DATABASE_URL, poolclass=NullPool)
+else:
+    # Default pooling for production/development
+    engine = create_engine(DATABASE_URL)
+
+# Create session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+# Create base class for models
 Base = declarative_base()
 
 # Dependency to get DB session

@@ -1,0 +1,7 @@
+# File: backend/services/api_gateway/requirements.txt
+fastapi>=0.95.0
+uvicorn>=0.22.0
+httpx>=0.24.0
+python-dotenv>=1.0.0
+pyjwt>=2.6.0
+cryptography>=39.0.0

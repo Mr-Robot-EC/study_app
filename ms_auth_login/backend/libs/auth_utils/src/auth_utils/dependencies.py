@@ -1,13 +1,12 @@
-from uuid import UUID
+# File: backend/libs/auth_utils/src/auth_utils/dependencies.py
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from .models import CurrentUser
+from .models.user import CurrentUser
 from .jwt import decode_jwt
 
 # Token security scheme
 security = HTTPBearer()
-
 
 async def get_current_user(
         credentials: HTTPAuthorizationCredentials = Depends(security),
@@ -37,7 +36,7 @@ async def get_current_user(
         )
 
     return CurrentUser(
-        id=UUID(user_id),
+        id=user_id,
         email=payload.get("email", ""),
         name=payload.get("name"),
         roles=payload.get("roles", []),

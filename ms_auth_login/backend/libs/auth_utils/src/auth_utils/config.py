@@ -1,3 +1,4 @@
+# File: backend/libs/auth_utils/src/auth_utils/config.py
 import os
 
 # JWT Configuration (load from environment in production)

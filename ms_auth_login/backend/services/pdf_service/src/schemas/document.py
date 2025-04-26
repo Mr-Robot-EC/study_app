@@ -1,10 +1,11 @@
+# File: backend/services/pdf_service/src/schemas/document.py
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class DocumentBase(BaseModel):
-    title: str
+    title: str = Field(..., min_length=1)
     content: str
 
 class DocumentCreate(DocumentBase):

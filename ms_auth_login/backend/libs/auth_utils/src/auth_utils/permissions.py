@@ -1,9 +1,10 @@
+# File: backend/libs/auth_utils/src/auth_utils/permissions.py
 from typing import List
+from uuid import UUID
 from fastapi import Depends, HTTPException, status
 
-from .models import CurrentUser
+from .models.user import CurrentUser
 from .dependencies import get_current_user
-
 
 def require_roles(required_roles: List[str]):
     """
@@ -74,7 +75,7 @@ async def validate_ownership(resource_user_id: UUID, current_user: CurrentUser):
         return True
 
     # Users can only access their own resources
-    if resource_user_id != current_user.id:
+    if resource_user_id != UUID(current_user.id):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to access this resource"

@@ -1,9 +1,10 @@
+# File: backend/services/pdf_service/src/api/document.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID, uuid4
 
-from backend.libs.auth_utils import get_current_user, CurrentUser, validate_ownership
+from auth_utils import get_current_user, CurrentUser, validate_ownership
 from ..db.session import get_db
 from ..db.models import Document, DocumentAudit
 from ..schemas import DocumentCreate, DocumentUpdate, Document as DocumentSchema, DocumentAudit as DocumentAuditSchema
@@ -25,7 +26,7 @@ async def create_document(
         id=uuid4(),
         title=document.title,
         content=document.content,
-        user_id=current_user.id  # User ID from JWT
+        user_id=UUID(current_user.id)  # User ID from JWT
     )
 
     db.add(db_document)
@@ -37,7 +38,7 @@ async def create_document(
         id=uuid4(),
         document_id=db_document.id,
         action="created",
-        user_id=current_user.id
+        user_id=UUID(current_user.id)
     )
     db.add(audit)
     db.commit()
@@ -57,7 +58,7 @@ async def read_documents(
         documents = db.query(Document).offset(skip).limit(limit).all()
     else:
         documents = db.query(Document).filter(
-            Document.user_id == current_user.id
+            Document.user_id == UUID(current_user.id)
         ).offset(skip).limit(limit).all()
 
     return documents
@@ -82,7 +83,7 @@ async def read_document(
         id=uuid4(),
         document_id=document.id,
         action="viewed",
-        user_id=current_user.id
+        user_id=UUID(current_user.id)
     )
     db.add(audit)
     db.commit()
@@ -117,7 +118,7 @@ async def update_document(
         id=uuid4(),
         document_id=db_document.id,
         action="updated",
-        user_id=current_user.id,
+        user_id=UUID(current_user.id),
         details=f"Updated fields: {', '.join(document_update.dict(exclude_unset=True).keys())}"
     )
     db.add(audit)
@@ -145,7 +146,7 @@ async def delete_document(
         id=uuid4(),
         document_id=document.id,
         action="deleted",
-        user_id=current_user.id
+        user_id=UUID(current_user.id)
     )
     db.add(audit)
 
@@ -176,3 +177,29 @@ async def get_document_audit_trail(
     ).order_by(DocumentAudit.created_at.desc()).all()
 
     return audit_trail
+
+# File: backend/services/pdf_service/src/api/admin.py
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
+from uuid import UUID
+
+from auth_utils import CurrentUser, require_roles
+from ..db.session import get_db
+from ..db.models import Document
+from ..schemas import Document as DocumentSchema
+
+router = APIRouter(
+    prefix="/admin",
+    tags=["admin"]
+)
+
+@router.get("/documents", response_model=List[DocumentSchema])
+async def admin_read_all_documents(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(require_roles(["admin"]))  # Only admins can access
+):
+    documents = db.query(Document).offset(skip).limit(limit).all()
+    return documents
