@@ -44,10 +44,11 @@ class UserInDB(UserBase):
     updated_at: datetime
     last_login: Optional[datetime] = None
     google_id: Optional[str] = None
-    metadata: Optional[Dict] = {}
+    user_metadata: Optional[Dict] = {}  # Changed from 'metadata' to 'user_metadata'
+
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class User(UserInDB):

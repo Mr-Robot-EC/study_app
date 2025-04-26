@@ -11,9 +11,8 @@ from ..core.config import settings
 from ..core.security import verify_password, get_password_hash, create_jwt_token
 from ..db.session import get_db
 from ..db.models import User, RefreshToken
-from ..schemas import UserCreate, Token, RefreshTokenRequest, User as UserSchema
 from .webhooks import trigger_webhook
-
+from ..schemas import UserCreate, Token, RefreshTokenRequest, LogoutRequest, User as UserSchema
 router = APIRouter(tags=["authentication"])
 
 
@@ -95,7 +94,7 @@ async def login_for_access_token(
             "name": user.full_name,
             "roles": user.roles,
             "permissions": user.permissions,
-            "metadata": {
+            "user_metadata": {  # Changed from 'metadata'
                 "last_login": user.last_login.isoformat(),
                 "login_method": "credentials"
             }
@@ -397,7 +396,7 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
             if not user.metadata:
                 user.metadata = {}
 
-            user.metadata.update({
+            user.user_metadata.update({  # Changed from 'metadata'
                 "google_profile": {
                     "picture": user_info.get("picture"),
                     "locale": user_info.get("locale")

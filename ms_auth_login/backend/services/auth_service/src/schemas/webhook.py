@@ -37,4 +37,4 @@ class WebhookResponse(WebhookBase):
     config: Dict = {}
 
     class Config:
-        orm_mode = True
+        from_attributes = True

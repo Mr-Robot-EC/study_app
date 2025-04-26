@@ -1,7 +1,7 @@
 # File: backend/services/auth_service/src/db/models/webhook.py
 import uuid
 from datetime import datetime
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Text
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Text, Integer
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 

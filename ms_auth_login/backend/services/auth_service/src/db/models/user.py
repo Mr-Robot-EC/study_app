@@ -1,4 +1,3 @@
-# File: backend/services/auth_service/src/db/models/user.py
 import uuid
 from datetime import datetime
 from sqlalchemy import Boolean, Column, DateTime, String
@@ -18,7 +17,7 @@ class User(Base):
     roles = Column(ARRAY(String), default=["user"])
     permissions = Column(ARRAY(String), default=["read:own"])
     google_id = Column(String, nullable=True, unique=True)
-    metadata = Column(JSONB, default={})
+    user_metadata = Column(JSONB, default={})  # Changed from 'metadata' to 'user_metadata'
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     last_login = Column(DateTime, nullable=True)

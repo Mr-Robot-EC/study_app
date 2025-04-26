@@ -10,7 +10,7 @@ import sqlite3
 from .api import auth_router, users_router, webhooks_router
 from .core.config import settings
 from .db.session import engine
-from .db.models import Base
+from .db.session import Base
 
 # Configure logging
 logging.basicConfig(
