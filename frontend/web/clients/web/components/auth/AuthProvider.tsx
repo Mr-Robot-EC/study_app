@@ -1,7 +1,6 @@
-'use client';
-
 import { SessionProvider } from 'next-auth/react';
 import { ReactNode } from 'react';
+import { JSX } from 'react';
 
 interface AuthProviderProps {
   children: ReactNode;
