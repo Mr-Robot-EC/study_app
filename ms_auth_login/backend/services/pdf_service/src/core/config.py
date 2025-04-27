@@ -1,6 +1,6 @@
 # File: backend/services/pdf_service/src/core/config.py
 import os
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings  # Changed from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):

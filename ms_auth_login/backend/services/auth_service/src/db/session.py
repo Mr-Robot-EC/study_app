@@ -3,20 +3,18 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import NullPool
 
-from ..core.config import settings
+# Load directly from environment variables
+user = os.getenv("POSTGRES_USER", "auth_user")
+password = os.getenv("POSTGRES_PASSWORD", "1234")
+host = os.getenv("POSTGRES_HOST", "localhost")
+database = os.getenv("POSTGRES_DB", "auth_db")
 
-# Get database URL from settings
-DATABASE_URL = settings.DATABASE_URL
+# Construct the URL directly
+DATABASE_URL = f"postgresql://{user}:{password}@{host}/{database}"
 
-# Choose connection pooling based on environment
-if settings.ENVIRONMENT == "test":
-    # Use NullPool for testing to avoid connection leaks
-    engine = create_engine(DATABASE_URL, poolclass=NullPool)
-else:
-    # Default pooling for production/development
-    engine = create_engine(DATABASE_URL)
+# Create engine
+engine = create_engine(DATABASE_URL)
 
 # Create session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -6,7 +6,7 @@ import logging
 from .api import document_router, admin_router
 from .core.config import settings
 from .db.session import engine
-from .db.models import Base
+from .db.session import Base
 
 # Configure logging
 logging.basicConfig(
