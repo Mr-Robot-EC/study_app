@@ -1,7 +1,8 @@
 import SignUpForm from '@/components/auth/SignUpForm';
 import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/[...nextauth]/route';
+import { JSX } from 'react';
 
 export default async function SignUpPage(): Promise<JSX.Element> {
   // Redirect if already authenticated

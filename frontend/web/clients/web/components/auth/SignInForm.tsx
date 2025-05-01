@@ -3,6 +3,7 @@
 import { useState, FormEvent } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { JSX } from 'react';
 
 export default function SignInForm(): JSX.Element {
   const [email, setEmail] = useState<string>('');

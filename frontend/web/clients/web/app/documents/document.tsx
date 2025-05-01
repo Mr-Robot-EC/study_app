@@ -1,5 +1,6 @@
 import { requireAuth } from '@/lib/auth';
 import Link from 'next/link';
+import { JSX } from 'react';
 
 // In a real app, you would fetch documents from your API
 async function getDocuments() {

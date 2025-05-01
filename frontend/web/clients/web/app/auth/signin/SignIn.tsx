@@ -1,7 +1,8 @@
 import SignInForm from '@/components/auth/SignInForm';
 import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/[...nextauth]/route';
+import { JSX } from 'react';
 
 export default async function SignInPage(): Promise<JSX.Element> {
   // Redirect if already authenticated

@@ -1,5 +1,6 @@
 import { requireAuth } from '@/lib/auth';
 import Link from 'next/link';
+import { JSX } from 'react';
 
 export default async function DashboardPage(): Promise<JSX.Element> {
   const user = await requireAuth();

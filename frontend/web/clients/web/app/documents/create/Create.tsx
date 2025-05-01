@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/Input';
 import { createDocument } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { useState, FormEvent } from 'react';
+import { JSX } from 'react';
 
 export default function CreateDocumentPage(): JSX.Element {
   const [title, setTitle] = useState<string>('');

@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { JSX } from 'react';
 
 const getErrorMessage = (error: string | null): string => {
   switch (error) {
